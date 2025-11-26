@@ -20,15 +20,15 @@ interface Props {
 }
 
 const { name, title, description, avatar, location, socialLinks } = Astro.props;
+const BASE_URL = import.meta.env.BASE_URL;
 ---
 
 <section class="hero min-h-screen">
   <div class="hero-content flex-col lg:flex-column max-w-7xl gap-8">
-    <div class="max-w-2xl">
+    <div class="max-w-5xl">
       <h1 class="text-5xl font-bold mb-4">
         {name}
       </h1>
-      <p class="text-xl text-base-content/80 mb-2">{title}</p>
       {location && <p class="text-base-content/60 mb-4">{location}</p>}
       <p class="text-lg leading-relaxed mb-6">
         {description}
@@ -158,7 +158,7 @@ const { name, title, description, avatar, location, socialLinks } = Astro.props;
       }
     </div>
     <div class="max-w-4xl mx-auto">
-      <img src="/figs/intro_figure.svg" alt="Overview of Action Chunking and Noise Injection" class="w-full" />
+      <img src={`${BASE_URL}/figs/intro_figure.svg`} alt="Overview of Action Chunking and Noise Injection" class="w-full" />
     </div>
   </div>
 </section>

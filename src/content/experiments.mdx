@@ -2,14 +2,16 @@ import Figure from '../components/Figure.astro';
 import FigureEnv from '../components/FigureEnv.astro';
 import HStack from '../components/HStack.astro';
 
+export const BASE_URL = import.meta.env.BASE_URL;
+
 ## Experimental Validation
 
 <FigureEnv>
   <HStack>
-    <Figure src="/figs/halfcheetah_chunk_sweep.png" alt="Action chunking sweep results" />
-    <Figure src="/figs/halfcheetah_prop_sweep.png" alt="Proportional sweep results" />
-    <Figure src="/figs/halfcheetah_sweep.png" alt="HalfCheetah sweep results" />
-    <Figure src="/figs/humanoid_sweep.png" alt="Humanoid sweep results"/>
+    <Figure src={`${BASE_URL}/figs/halfcheetah_chunk_sweep.png`} alt="Action chunking sweep results" />
+    <Figure src={`${BASE_URL}/figs/halfcheetah_prop_sweep.png`} alt="Proportional sweep results" />
+    <Figure src={`${BASE_URL}/figs/halfcheetah_sweep.png`} alt="HalfCheetah sweep results" />
+    <Figure src={`${BASE_URL}/figs/humanoid_sweep.png`} alt="Humanoid sweep results"/>
   </HStack>
 </FigureEnv>
 
@@ -25,9 +27,9 @@ To validate our predictions about the **stability-theoretic** benefits of action
 
 <FigureEnv>
   <HStack>
-    <Figure src="/figs/noise_inj_sweep_noisy.png" alt="Noise injection sweep: noisy trajectories"/>
-    <Figure src="/figs/noise_inj_sweep_sigma.png" alt="Noise injection sweep: sigma parameter"/>
-    <Figure src="/figs/noise_inj_sweep_alpha_sigma1.png" alt="Noise injection sweep: alpha and sigma1"/>
+    <Figure src={`${BASE_URL}/figs/noise_inj_sweep_noisy.png`} alt="Noise injection sweep: noisy trajectories"/>
+    <Figure src={`${BASE_URL}/figs/noise_inj_sweep_sigma.png`} alt="Noise injection sweep: sigma parameter"/>
+    <Figure src={`${BASE_URL}/figs/noise_inj_sweep_alpha_sigma1.png`} alt="Noise injection sweep: alpha and sigma1"/>
   </HStack>
 </FigureEnv>
 

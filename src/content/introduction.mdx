@@ -3,11 +3,16 @@ import Figure from '../components/Figure.astro';
 import FigureEnv from '../components/FigureEnv.astro';
 import HStack from '../components/HStack.astro';
 
+export const BASE_URL = import.meta.env.BASE_URL;
+
 ## Introduction
 
 Imitation learning (IL) is the problem of learning complex behaviors from data labeled with actions from an expert demonstrator policy. This methodology encompasses both some of the earliest examples and most recent state-of-the-art in control for autonomous robotic systems. Following the rise of large language models (LLMs), IL has also become increasingly prevalent in settings where an agent predicts **discrete tokens**, such as words in a sentence, lines in a proof, or positions on a chessboard. Such methods have also seen adoption in the context of both continuous and discretized-action control of continuous state-space dynamical systems in an autoregressive fashion.
 
-The recent and dramatic successes of imitation learning in continuous control applications has coincided with a range of algorithmic interventions which appear essential to ensure strong performance: 1. the prediction of open-loop sequences, or "chunks" of actions by the control policy, called **action-chunking** (AC), 2. the careful curation of expert data to be imitated and 3. the adoption of **generative** neural architectures (e.g. conditional diffusion models) as parameterizations of learned policies. While the benefits of 3. have been studied broadly, a precise understanding of how action-chunking and curated expert data improve behavior cloning performance remains elusive.
+The recent and dramatic successes of imitation learning in continuous control applications has coincided with a range of algorithmic interventions which appear essential to ensure strong performance:
+
+  1. the prediction of open-loop sequences, or "chunks" of actions by the control policy, called **action-chunking** (AC),
+  2. the careful curation of expert data to be imitated and 3. the adoption of **generative** neural architectures (e.g. conditional diffusion models) as parameterizations of learned policies. While the benefits of 3. have been studied broadly, a precise understanding of how action-chunking and curated expert data improve behavior cloning performance remains elusive.
 
 In this work, we provide the first theoretical guarantees justifying the practices of AC and exploratory data augmentation during expert data collection (defined formally below) in the **minimal** setting of imitation of an expert in a state-based continuous-control problem. Our point of departure is the finding in recent work that imitation learning in continuous settings&mdash;even those whose dynamics and expert demonstrator appear benign&mdash;can be considerably more challenging than imitation in discrete settings, such as those encountered in language modeling, demonstrating compounding errors can grow exponentially with horizon, as opposed to polynomially (or none).
 
@@ -21,7 +26,7 @@ We provide the first theoretical guarantees in continuous state-action IL for **
 
 <FigureEnv>
   <HStack>
-    <Figure src="/figs/action_chunking.svg" alt="Overview of Action Chunking and Noise Injection" height="25rem"/>
+    <Figure src={`${BASE_URL}/figs/action_chunking.svg`} alt="Overview of Action Chunking and Noise Injection" height="25rem"/>
   </HStack>
 </FigureEnv>
 

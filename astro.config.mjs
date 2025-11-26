@@ -6,8 +6,14 @@ import mdx from '@astrojs/mdx';
 import remarkMath from 'remark-math';
 import rehypeMathjax from 'rehype-mathjax';
 
+const SITE_URL = process.env.ASTRO_SITE_URL || 'https://localhost/';
+const BASE_PATH = new URL(SITE_URL).pathname;
+
 // https://astro.build/config
 export default defineConfig({
+  site: SITE_URL,
+  base: BASE_PATH,
+  trailingSlash: 'never',
   integrations: [
     mdx({
       remarkPlugins: [remarkMath],

@@ -3,6 +3,8 @@ import Figure from '../components/Figure.astro';
 import FigureEnv from '../components/FigureEnv.astro';
 import HStack from '../components/HStack.astro';
 
+export const BASE_URL = import.meta.env.BASE_URL;
+
 ## Preliminaries
 
 We consider a discrete-time, continuous state-action control system with states $\mathbf{x}_t \in \mathcal{X} = \mathbb{R}^{d_x}$ and inputs $\mathbf{u}_t \in \mathcal{U} = \mathbb{R}^{d_u}$, where dynamics deterministically evolve according to $\mathbf{x}_{t+1} = f(\mathbf{x}_t,\mathbf{u}_t)$. A deterministic policy $\pi$ maps histories of states, inputs, and the current time step to a control input $\mathbf{u}_t = \pi(\mathbf{x}_{1:t},\mathbf{u}_{1:t-1},t)$. We assume the initial state is drawn $\mathbf{x}_1 \sim D$ for some distribution $D$ fixed throughout. We say $\pi$ is Markovian and time-invariant if we can simply express $\mathbf{u}_t = \pi(\mathbf{x}_t)$. In this case, we define the closed-loop dynamics $f^{\pi}(\mathbf{x},\mathbf{u}) \triangleq f(\mathbf{x}, \pi(\mathbf{x}) + \mathbf{u})$, and $f^{\pi}(\mathbf{x}) = f^{\pi}(\mathbf{x},0)$.
@@ -37,7 +39,7 @@ We say a policy-dynamics pair $(\pi,f)$ is $(C_{\text{ISS}},\rho)$-EISS if the i
 
 <FigureEnv>
   <HStack>
-    <Figure src="/figs/stability_diagram.svg"
+    <Figure src={`${BASE_URL}/figs/stability_diagram.svg`}
         alt="Visualization of EISS (Exponentially Incrementally Input-to-State Stable)" />
   </HStack>
 </FigureEnv>
