@@ -75,7 +75,7 @@ export const siteConfig: SiteConfig = {
   name: "Action Chunking and Exploratory Data Collection Yield Exponential Improvements in Behavior Cloning",
   title: "Action Chunking and Exploratory Data Collection Yield Exponential Improvements in Behavior Cloning",
   description:
-    "A theoretical analysis of action-chunking and exploratory augmentation in imitation learning, demonstrating how these interventions circumvent exponential compounding errors through control-theoretic stability.",
+    "TL;DR: We explain why Action-Chunking, an immensely popular practice in modern robot learning, works.",
   avatar: "../assets/astro.svg",
   location: "Thomas T. Zhang, Daniel Pfrommer, Chaoyi Pan, Nikolai Matni, and Max Simchowitz",
   email: "",

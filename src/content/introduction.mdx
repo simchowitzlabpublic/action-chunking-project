@@ -5,7 +5,52 @@ import HStack from '../components/HStack.astro';
 
 export const BASE_URL = import.meta.env.BASE_URL;
 
-Imitation Learning (IL), using teleoprated or synthetic demonstration data, has become a cornerstone of general-purpose robotics platforms. Most IL pipelines have converged on three defining pipeline characteristics:
+## Introduction
+
+Behavior Cloning (BC), or learning from human demonstration, is a foundational component of modern robotic learning. Though BC has been studied for decades in other domains (cite: ALVINN, self-driving), only recently seen success for robot manipulation. Though these successess have been attributed to the use of generative models (e.g. diffusion models) as parametrizations for control policies, a second, ingredient of equal importance is the practice of **action-chunking** (AC), where policies predict and execute open-loop sequences of actions, or "chunks" (Zhao et al. 23, Chi et al. '23). In this paper, we aim to answer: 
+ 
+  **1. Why does action-chunking help behavior cloning in robotic manipulation?**  
+
+  **2. When action-chunking doesn't work, what else can be done?**
+
+
+**TODO: Insert AC Figure from Slac**
+**TODO: Add References to Zhao (ACT), Chi (Diffusion Policy), Pitfalls, and Agrachev, and ALVINN**,
+
+## Summary of Findings 
+
+
+There are a number of speculated benefits associated with action-chunking, including improved representation learning, multi-modal prediction, and receding-horizon control. However, we identify a more fundamental benefit: **action-chunking encourages stability of the learned policy in closed-loop interaction with the environment, mitigating compounding errors**. 
+
+
+<Block type="Finding 1"> 
+When the underlying environment is open-loop stable, action-chunking alone suffices to prevent compounding errors, leading to horizon-free imitation guarantees. In contrast, without action-chunking, prior work (Simchowitz, Pfrommer, Jadbabaie '25') show that errors can grow expoenntially in the problem horizon, even when the dynamics are stable. 
+</Block>
+We validate this finding in simulated robotic manipulation tasks from RoboMimic, where we observe that increasing chunk-lengths leads to significant improvements in task success rates. We do so even for deterministic policies imitating a deterministic expert, confirming that the benefits of action-chunking can be realized even in the absence of multi-modality or partial observability.
+
+**TODO : Insert RoboMimic Figure**
+
+
+Informally, stability of a dynamical system measures its sensitivity to compounding errors: stable systems attenuate small perturbations over time, while unstable systems amplify them.. As described below, open-loop stability is a valid assumption for many robotic manipulation settings, where the robot interacts with objects in a quasi-static manner via end effector control.  
+
+**TODO : Insert AC Failure on Mujoco, Side By Side Half Cheetah**
+
+
+However, when the underlying environment is not open-loop stable, action-chunking alone is insufficient to prevent compounding errors, and can even make compounding error worse. In fact, Simchowitz et al. '25 show that, in this regime, *no algorithmic* modification suffices to mitigate error compounding. Instead, we need **better data**.  To this end, we consider a simple practice where the expert demonstrator adds a small amount of well-conditioned noise to their actions during data collection, but collects ground-truth action labels. 
+<Block type="Finding 2"> 
+We show that this simple practice suffices to prevent compounding errors, even when the underlying environment is not open-loop stable.
+</Block>
+
+
+
+
+
+
+
+
+
+
+{/* Imitation Learning (IL), using teleoprated or synthetic demonstration data, has become a cornerstone of general-purpose robotics platforms. Most IL pipelines have converged on three defining pipeline characteristics: 
 
   1. The prediction of open-loop sequences, or "chunks" of actions by the control policy, called **action-chunking** (AC),
   2. The careful curation of expert data to be imitated.
@@ -22,11 +67,13 @@ Concretely, we study the following widespread practices:
 
 **Intervention 2: Exploratory Data Collection via Expert Noise-Injection.** When the environment is less benign, some alteration of the expert data distribution is necessary. We demonstrate **noise-injection**, i.e., adding noise while executing expert actions, is a simple and practical tool for avoiding compounding errors.
 
+
 <FigureEnv>
   <HStack>
     <Figure src={`${BASE_URL}/figs/action_chunking.svg`} alt="Overview of Action Chunking and Noise Injection" height="25rem"/>
   </HStack>
 </FigureEnv>
+
 
 <Block type="Surprising Takeaways">
 While our interventions are reflective of popular practices at the intersection of (reinforcement) learning and control, our analysis additionally uncovers phenomena that contrast with the common perspectives of both literatures.
@@ -40,3 +87,4 @@ While our interventions are reflective of popular practices at the intersection 
 4. **Towards New Notions of "Excitation" in Continuous State Space:** Despite requiring stronger coverage, our bounds do not require the injected noise to produce "persistent excitation" from control theory, i.e. uniform variation across all state directions. Rather **naive exploration** via white noise suffices, even when the underlying system is not controllable. This is because the **error-directions which are susceptible to compounding error are precisely those along which noise injection provides supervision**.
 </Block>
 
+*/}

@@ -27,13 +27,13 @@ For the noise-injected distribution $\mathcal{P}_{\text{exp},\sigma}$ defined ab
 Let the expert policy and true dynamics $(\pi^*, f)$ be $(C_\pi,C_{\text{smooth}})$-smooth, respectively, and all policies $\pi$ are $L_\pi$-Lipschitz. The closed-loop system induced by $(\pi^*, f)$ is $(C_{\text{ISS}}, \rho)$-EISS. Let $\hat{\pi}$ be a $L_\pi$-Lipschitz, $C_\pi$-smooth policy. Then, for $\sigma_u \lesssim O^*[\text{poly}(1/C_\pi, 1/C_{\text{smooth}})] = O^*(1)$, we have:
 
 $$
-J_{L^2}^T(\hat{\pi}) \lesssim O^*(T) \sigma_u^{-2} J_{\text{demo}}^T(\hat{\pi}; \mathcal{P}_{\text{exp},\sigma,\alpha}[0.5]).
+J_{\mathrm{imitation}}(\hat{\pi}) \lesssim O^*(T) \sigma_u^{-2} J_{\text{demo}}^T(\hat{\pi}; \mathcal{P}_{\text{exp},\sigma,\alpha}[0.5]).
 $$
 
 In particular, setting $\sigma_u = O^*(1)$, we have:
 
 $$
-J_{L^2}^T(\hat{\pi}) \lesssim O^*(T) J_{\text{demo}}^T(\hat{\pi}; \mathcal{P}_{\text{exp},\sigma,\alpha}[0.5]).
+J_{\mathrm{imitation}}(\hat{\pi}) \lesssim O^*(T) J_{\text{demo}}^T(\hat{\pi}; \mathcal{P}_{\text{exp},\sigma,\alpha}[0.5]).
 $$
 </Block>
 
