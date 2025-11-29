@@ -38,9 +38,9 @@ $$
 
 We say $\pi$ is Markovian and time-invariant if we can simply express $\mathbf{u}_t = \pi(\mathbf{x}_t)$. In this case, we define the **closed-loop dynamics** $f^{\pi}(\mathbf{x},\mathbf{u}) \triangleq f(\mathbf{x}, \pi(\mathbf{x}) + \mathbf{u})$, and $f^{\pi}(\mathbf{x}) \triangleq f(\mathbf{x},\pi(\mathbf{x}))$.
 
-Throughout the rest of this post we will assume that we have been given access to some number of **demonstration trajectories** sampled from $\mathcal{P}_{\text{demo}}$ (generally sampling from $\pi^\star$). An offline Imitation Learning algorithm $\mathcal{A}$ can thus be formalized as a (possibly randomized) map from $n$, $T$-length demonstration trajectories of length $T$, $S_n \sim \mathcal{P}_{\text{demo}}$, to a policy $\hat{\pi}$. The resulting $\hat{\pi}$ suffers from some **on-expert error**[^2],
+Throughout the rest of this post we will assume that we have been given access to some number of **demonstration trajectories** sampled from $\mathcal{P}_{\text{demo}}$ (which we generally take to be $\mathcal{P}_{\text{exp}}$, trajectories sampled using $\pi^\star$). An offline Imitation Learning algorithm $\mathcal{A}$ can thus be formalized as a (possibly randomized) map from $n$, $T$-length demonstration trajectories of length $T$, $S_n \sim \mathcal{P}_{\text{demo}}$, to a policy $\hat{\pi}$. The resulting $\hat{\pi}$ suffers from some **on-expert error**[^2],
 $$
-J_{\mathrm{demo}}(\hat{\pi}) \triangleq \mathbb{E}_{\pi^*}\left[\sum_{t=1}^T \min\left\{1,\|\hat{\pi}(\mathbf{x}_t^\star) - \pi^\star(\mathbf{x}_t^\star)\|^2\right\}\right].
+J_{\mathrm{demo}}(\hat{\pi}; \mathcal{P}_{\text{demo}}) \triangleq \mathbb{E}_{\pi^*}\left[\sum_{t=1}^T \min\left\{1,\|\hat{\pi}(\mathbf{x}_t^\star) - \pi^\star(\mathbf{x}_t^\star)\|^2\right\}\right].
 $$
 
 ### The Compounding Error Problem
@@ -48,8 +48,7 @@ $$
 One of the key challenges in Imitation Learning is that of *Compounding Error* [@simchowitz2025pitfalls], which we can now formalize explicitly,
 
 <Block title="Compounding Error" type="Definition">
-An imitation learning algorithm $\mathcal{A}$ suffers from **exponential compounding errors** on $(f, \mathcal{D}, \pi^\star)$ if, for some $C > 1$ and any choice of demonstration length $T > 0$,
-<div style="height: 0.8em"></div>
+An imitation learning algorithm $\mathcal{A}$ suffers from **exponential compounding errors** on $(f, \pi^\star, \mathcal{D})$ given a demonstration distribution $\mathcal{P}_{\text{demo}}$ if, for some $C > 1$ and any choice of demonstration length $T > 0$,
 $$
 E_{\hat{\pi}, S_n}[J_{\mathrm{imitation}}(\hat{\pi})] \gtrsim C^T \cdot E_{\hat{\pi}, S_n}[J_{\mathrm{demo}}(\hat{\pi}; \mathcal{P}_{\text{demo}})].
 $$
@@ -94,28 +93,28 @@ Given an EISS system (for either $f$ or the closed-loop $f^\pi$), it may appear 
 However, this is unfortunately not the case. This surprising fact is formalized in our prior work [@simchowitz2025pitfalls], which we restate (informally) here:
 
 <Block type="Theorem" title="IL Hardness Lower Bounds">
-There exist families $\mathcal{P}_{\text{stab}}$, $\mathcal{P}_{\text{unstab}}$ of (dynamics $f$, expert $\pi^\star$) such that
+There exist families $\mathcal{F}_{\text{stab}}$, $\mathcal{F}_{\text{unstab}}$ of dynamics, expert pairs $(f, \pi^\star)$ such that
 $\mathcal{P}_{\text{demo}}$ drawn using $\pi^\star$ is identical across all instances and:
 
-<div style="height: 0.5em"></div>
 
-  1. For every $(f, \pi^\star) \in \mathcal{P}_{\text{stab}}$, the **open-loop $f$ and closed-loop $f^{\pi^\star}$ are both EISS** and $\pi, f$ are Lipschitz and smooth. However any algorithm $\mathcal{A}$ which returns smooth, Lipschitz, Markovian policies with state-independent stochasticisty must suffer exponential-in-$T$ compounding error for some $(f, \pi^\star) \in \mathcal{P}_{\text{stab}}$.
+  1. For every $(f, \pi^\star) \in \mathcal{F}_{\text{stab}}$, the **open-loop $f$ and closed-loop $f^{\pi^\star}$ are both EISS** and $\pi, f$ are Lipschitz and smooth. However any algorithm $\mathcal{A}$ which returns smooth, Lipschitz, Markovian policies with state-independent stochasticisty must suffer exponential-in-$T$ compounding error for some $(f, \pi^\star) \in \mathcal{F}_{\text{stab}}$.
 
-  2. For every $(f,\pi^\star) \in \mathcal{P}_{\text{stab}}$, $f^{\pi^\star}$ is **closed-loop EISS** and $\pi, f$ are Lipschitz and smooth. However **any algorithm $\mathcal{A}$, without restriction**, must suffer exponential-in-$T$ compounding error for some $(f, \pi^\star) \in \mathcal{P}_{\text{stab}}$.
+  2. For every $(f,\pi^\star) \in \mathcal{F}_{\text{unstab}}$, $f$ is not necessarily EISS, but the closed-loop $f^{\pi^\star}$ is EISS and $\pi, f$ are Lipschitz and smooth. However **any algorithm $\mathcal{A}$, without restriction**, must suffer exponential-in-$T$ compounding error for some $(f, \pi^\star) \in \mathcal{F}_{\text{stab}}$.
 
 </Block> 
 
-Indeed, it is possible to construct fairly simple (dynamics, expert) pairs $(f, \pi^\star)$ such where both the open-loop $f$ and closed-loop $f^{\pi^\star}$ uder the expert are EISS, yet the closed-loop $f^\hat{\pi}$ using the *learned policy* is potentially **not EISS, for any choice of algorithm $\mathcal{A}$**.
+Indeed, it is possible to construct fairly simple (dynamics, expert) pairs $(f, \pi^\star)$ such where both the open-loop $f$ and closed-loop $f^{\pi^\star}$ uder the expert are EISS, yet the closed-loop $f^\hat{\pi}$ using the *learned policy* is potentially **not EISS**.
 
-This naturaly sets the stage for our twin results:
+This naturally sets the stage for our twin results:
 
-  1. For any EISS-stable $f$, using **action chunking** provably avoids compounding error.
+  1. For any EISS-stable $f$,
+     using **action chunking** provably avoids compounding error.
      This bypasses the first hardness lower bound as chunking policies maintain internal state (the chunk sequence) and are therefore *non-Markovian*. By choosing action-chunk lengths that are sufficiently long, we can guarantee that the closed-loop $f^{\hat{\pi}}$ under the learned policy $\hat{\pi}$ is always EISS.
 
-  2. For any EISS-stable $f^{\pi^\star}$, where $f$ may potentially be unstable,
-     a simple modification to the data collection procedure using noise-injection (à la DART, @laskey2017dart) is sufficient to guarantee that $f^{\hat{\pi}}$ under the learned policy is EISS.
+  2. For any EISS-stable $f^{\pi^\star}$,
+     where $f$ may potentially be unstable, a simple modification to the data collection procedure using noise-injection (à la DART, @laskey2017dart) is sufficient to guarantee that $f^{\hat{\pi}}$ under the learned policy is EISS.
  
-     The hardness results rely on $\pi^\star$ (and therefore, $\mathcal{P}_{\text{demo}}$) which explore only a subspace of the actual reachable portions of the subspace. This allows all $(f, \pi^\star) \in \mathcal{P}_{\text{stab}}, \mathcal{P}_{\text{unstab}}$ to share the same $\mathcal{P}_{\text{demo}}$ distribution and makes the "true" choice of $(f, \pi^\star)$ opaque to the learning algorithm. By modifying the data collection procedure from $\mathcal{P}_{\text{demo}}$, we can make $\pi^\star$ uniquely identifiable from $\mathcal{P}_{\text{demo}}$ and bypass the lower bound.
+     The hardness results rely on $\pi^\star$ (and therefore, $\mathcal{P}_{\text{exp}}$) which explore only a subspace of the actual reachable portions of the subspace. This allows all $(f, \pi^\star) \in \mathcal{P}_{\text{stab}}, \mathcal{P}_{\text{unstab}}$ to share the same $\mathcal{P}_{\text{exp}}$ distribution and makes the "true" choice of $(f, \pi^\star)$ opaque to the learning algorithm. By modifying the data collection procedure from $\mathcal{P}_{\text{exp}}$, we can make $\pi^\star$ uniquely identifiable from $\mathcal{P}_{\text{exp}}$ and bypass the lower bound.
 
 {/*
   * Capture and hide the auto-generated bibliography
@@ -126,4 +125,4 @@ This naturaly sets the stage for our twin results:
 </Refs>
 
 
-#### Notes
+#### Note

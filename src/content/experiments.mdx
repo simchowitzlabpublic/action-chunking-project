@@ -6,14 +6,6 @@ export const BASE_URL = import.meta.env.BASE_URL.replace(/\/+$/, '');
 
 ## Experimental Validation
 
-<FigureEnv>
-  <HStack>
-    <Figure src={`${BASE_URL}/figs/halfcheetah_chunk_sweep.png`} alt="Action chunking sweep results" />
-    <Figure src={`${BASE_URL}/figs/halfcheetah_prop_sweep.png`} alt="Proportional sweep results" />
-    <Figure src={`${BASE_URL}/figs/halfcheetah_sweep.png`} alt="HalfCheetah sweep results" />
-    <Figure src={`${BASE_URL}/figs/humanoid_sweep.png`} alt="Humanoid sweep results"/>
-  </HStack>
-</FigureEnv>
 
 ### Action Chunking
 
@@ -23,7 +15,24 @@ To validate our predictions about the **stability-theoretic** benefits of action
 - The merits of action-chunking remain showcased in **deterministic, state-based control**. This reveals that action-chunking still improves performance independently of partial observability or compatibility with generative control policies.
 - **End-effector control** enables the benefits of action-chunking. This is because end-effector control renders the closed-loop between system state and end-effector prediction incrementally stable. Hence, the low-level end-effector controller transforms imitating the position policy to taking place in an open-loop stable dynamical system, precisely the regime where we prescribe our AC guarantees.
 
+<FigureEnv>
+  <HStack>
+    <Figure src={`${BASE_URL}/figs/halfcheetah_chunk_sweep.png`} alt="Action chunking sweep results" />
+    <Figure src={`${BASE_URL}/figs/halfcheetah_prop_sweep.png`} alt="Proportional sweep results" />
+    <Figure src={`${BASE_URL}/figs/halfcheetah_sweep.png`} alt="HalfCheetah sweep results" />
+    <Figure src={`${BASE_URL}/figs/humanoid_sweep.png`} alt="Humanoid sweep results"/>
+  </HStack>
+  We visualize performance as a function of noise injection and chunk length for the MuJoCo HalfCheetah environment, and show performance relative to both DAgger and DART on HalfCheetah, Humanoid.
+</FigureEnv>
+
 ### Noise Injection
+
+
+We seek to validate our hypotheses about the exploratory benefits of noise-injection. We propose experiments on MuJoCo continuous control environments, where we seek to imitate pre-trained expert policies. To summarize:
+
+- **Noise injection as in Intervention 2 provides the exploration necessary to mitigate compounding errors**, increasing performance on par with iteratively interactive methods such as DAgger and DART. We note Intervention 2 collects data in one shot, without ever observing learned policy rollouts.
+- **Larger noise scales $\sigma_u$ (within tolerance) improve performance**, in contrast to prior understanding which necessitates $\sigma_u$ set proportional to $J_{\text{demo}}(\hat{\pi}; \mathcal{P}_{\text{demo}})$, i.e. very small for policies with low on-expert error.
+- **A mixture of noise-injected and clean expert trajectories is beneficial**, and the difference is small when provided more data. This matches the theoretical intuition that noise-injection is necessary up until $\hat{\pi}$ is "locally stabilized" sufficiently well around $\mathbf{x}^*$, and thus only enters the trajectory error as a higher-order term.
 
 <FigureEnv>
   <HStack>
@@ -32,10 +41,3 @@ To validate our predictions about the **stability-theoretic** benefits of action
     <Figure src={`${BASE_URL}/figs/noise_inj_sweep_alpha_sigma1.png`} alt="Noise injection sweep: alpha and sigma1"/>
   </HStack>
 </FigureEnv>
-
-We seek to validate our hypotheses about the exploratory benefits of noise-injection. We propose experiments on MuJoCo continuous control environments, where we seek to imitate pre-trained expert policies. To summarize:
-
-- **Noise injection as in Intervention 2 provides the exploration necessary to mitigate compounding errors**, increasing performance on par with iteratively interactive methods such as DAgger and DART. We note Intervention 2 collects data in one shot, without ever observing learned policy rollouts.
-- **Larger noise scales $\sigma_u$ (within tolerance) improve performance**, in contrast to prior understanding which necessitates $\sigma_u$ set proportional to $J_{\text{demo}}^T(\hat{\pi}; \mathcal{P}_{\text{demo}})$, i.e. very small for policies with low on-expert error.
-- **A mixture of noise-injected and clean expert trajectories is beneficial**, and the difference is small when provided more data. This matches the theoretical intuition that noise-injection is necessary up until $\hat{\pi}$ is "locally stabilized" sufficiently well around $\mathbf{x}^*$, and thus only enters the trajectory error as a higher-order term.
-

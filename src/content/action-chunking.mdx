@@ -16,7 +16,7 @@ Action-chunking is a popular practice in modern sequential modeling pipelines, w
 
 
 <Block title="Chunking Policy" type="Definition">
-A chunking policy is specified by a chunk-length $\ell$, and a chunking policy $\text{chunk}[\pi]: \mathcal{X} \to \mathcal{U}^{\ell}$ such that $\pi(\mathbf{x}_{1:t},\mathbf{u}_{1:t-1},t) = \text{chunk}[\pi](\mathbf{x}_{\ell\lfloor \frac{t}{\ell}\rfloor})_{t - \ell\lfloor \frac{t}{\ell}\rfloor}$, i.e. we predict $\ell$-length sequences which are then executed "open-loop" without feedback from $\mathbf{x}$ until the chunk has been exhausted.
+A chunking policy is specified by a chunk-length $\ell$, and a chunking policy $\text{chunk}[\pi]: \mathcal{X} \to \mathcal{U}^{\ell}$ such that $\pi(\mathbf{x}_{1:t},\mathbf{u}_{1:t-1},t) = \text{chunk}[\pi](\mathbf{x}_{\ell k})_{t - \ell k}$ where $k = \lfloor \frac{t}{\ell}\rfloor$, i.e. we predict $\ell$-length sequences which are then executed "open-loop" without feedback from $\mathbf{x}$ until the chunk has been exhausted.
 </Block>
 For convenience we also write $\text{chunk}[\pi](\mathbf{x}) = (\text{chunk}_1(\mathbf{x}),\dots, \text{chunk}_{\ell}(\mathbf{x}))$ and denote a chunking policy as $\hat{\pi}_{\text{chunk}}$. For chunked policies, our demonstration loss becomes:
 
@@ -24,7 +24,9 @@ $$
 J_{\text{demo}}(\hat{\pi}_{\text{chunk}}) = \mathbb{E}_{\pi^\star}\left[ \sum_{k=1}^{(T-1)/\ell} \|\mathbf{u}^*_{1+(k-1)\ell:k\ell} - \text{chunk}[\hat{\pi}_{\text{chunk}}](\mathbf{x}^*_{(k-1)\ell})\|^2\right].
 $$
 
-**Intervention 1: Learning over Chunked Policies.** We sample $S_n$ as denote $n$ i.i.d. trajectories drawn from the expert distribution $\mathcal{P}_{\text{demo}}$. We aim to find $\hat{\pi}_{\text{chunk}}$ from a class of length-$\ell$ chunked policies, $\Pi_{\text{chunk}}$, that attains low **on-expert error** $J_{\text{demo}}(\hat{\pi}_{\text{chunk}})$, e.g., by empirical risk minimization.
+<Block type="Intervention 1" title="Learning over Chunked Policies">
+We sample $S_n$ i.i.d. trajectories drawn from the expert distribution $\mathcal{P}_{\text{demo}}$. Instead of learning $\hat{\pi}: \mathcal{X} \to \mathcal{U}$, we learn a $\ell$-chunked-policy $\text{chunk}[\hat{\pi}_{\text{chunk}}]: \mathcal{X} \to \mathcal{U}^\ell$, that attains low **on-expert error** $J_{\text{demo}}(\hat{\pi}_{\text{chunk}})$, e.g., by empirical risk minimization.
+</Block>
 
 The Control-Theoretic intuition behind this intervention is that, by making the chunk length long enough, the learned policy $\hat{\pi}_{\text{chunk}}$ **inherits the open-loop stability of the dynamics $f$**.
 

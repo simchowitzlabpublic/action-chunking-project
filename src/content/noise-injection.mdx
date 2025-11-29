@@ -1,7 +1,12 @@
+---
+bibliography: ./src/content/references.bib
+---
+
 import Block from '../components/Block.astro';
 import Figure from '../components/Figure.astro';
 import FigureEnv from '../components/FigureEnv.astro';
 import HStack from '../components/HStack.astro';
+import Refs from '../components/Refs.astro';
 
 export const BASE_URL = import.meta.env.BASE_URL.replace(/\/+$/, '');
 
@@ -13,32 +18,47 @@ We now consider the difficult setting where the ambient dynamics $f$ may not be 
 We define the **expert distribution under noise injection** as the distribution $\mathcal{P}_{\text{exp},\sigma}$ over trajectories $(\tilde{\mathbf{x}}_t, \tilde{\mathbf{u}}_t)_{t\geq 1}$ with $\tilde{\mathbf{x}}_1 \sim D$, and $\tilde{\mathbf{u}}_t = \pi^*(\tilde{\mathbf{x}}_t),\;\tilde{\mathbf{x}}_{t+1} = f(\tilde{\mathbf{x}}_t, \tilde{\mathbf{u}}_t + \sigma_u \mathbf{z}_t)$ for $t \geq 1$, where $\mathbf{z}_t \sim \text{Unif}(\mathbb{B}^{d_u}(1))$ is drawn uniformly over the unit ball.
 </Block>
 
+Our key innovation over prior algorithms such as DAgger or DART is that we learn using a weighted **mixture** of both the noise-injected $\mathcal{P}_{\text{exp},\sigma}$ and the "vanilla" expert data distribution $\mathcal{P}_{\text{exp}}$.
+
+Using a mixture is *provably better*, particularly in the high data regime with large $n$. This is an intuitive result: when $J_{\text{imitation}}$ is already low, using demonstrations with the fixed noise level $\sigma$, i.e. $\mathcal{P}_{\text{exp},\sigma}$ may explore *too* much and has low coverage on $\mathcal{P}_{\text{exp}}$.
+
+
 <Block title="Exploratory Data Collection" type="Intervention">
 For the noise-injected distribution $\mathcal{P}_{\text{exp},\sigma}$ defined above, provide a sample $S_{n,\sigma,\alpha}$ of trajectories, where for $1 \le i \le \lfloor\alpha n\rfloor$ the trajectories are i.i.d. from $\mathcal{P}_{\text{exp}}$, and the remaining trajectories are drawn i.i.d. from $\mathcal{P}_{\text{exp},\sigma}$. Define the corresponding mixture distribution $\mathcal{P}_{\text{exp},\sigma,\alpha} \triangleq \alpha \mathcal{P}_{\text{exp}} + (1-\alpha)\mathcal{P}_{\text{exp},\sigma}$. We then find $\hat{\pi}$ that attains low $J_{\text{demo}}^T(\hat{\pi}; \mathcal{P}_{\text{exp},\sigma,\alpha})$, e.g., by empirical risk minimization.
 </Block>
+
 
 <FigureEnv>
   <HStack>
     <Figure src={`${BASE_URL}/figs/exploration_diagram.svg`} alt="Exploratory data collection via noise injection"/>
   </HStack>
+  We can think of the data mixture as ensuring coverage both on-expert, as well as a "tube" around the expert trajectories. Using either one or the other is suboptimal, either due to lack of on-expert data, or off-expert data.
 </FigureEnv>
 
-<Block type="Key Result">
-Let the expert policy and true dynamics $(\pi^*, f)$ be $(C_\pi,C_{\text{smooth}})$-smooth, respectively, and all policies $\pi$ are $L_\pi$-Lipschitz. The closed-loop system induced by $(\pi^*, f)$ is $(C_{\text{ISS}}, \rho)$-EISS. Let $\hat{\pi}$ be a $L_\pi$-Lipschitz, $C_\pi$-smooth policy. Then, for $\sigma_u \lesssim O^*[\text{poly}(1/C_\pi, 1/C_{\text{smooth}})] = O^*(1)$, we have:
+Our results in this domain make extensive use of the analysis tools introduced in @pfrommer2022tasil, which provides strong guarantees when imitating a closed-loop EISS expert in an adversarial manner.
 
+There are many technical subtleties that we gloss over here but explore in-detail in our full manuscript. Namely our analysis is carefully constructed to consider coverage only on the manifold of reachable states. To perform this analysis in a technically rigorous requires careful Control-Theoretic analysis involving concepts such as the Controllability Grammian. We additionally make several simplifying assumptions regarding first-order-smoothness (i.e that $f, \pi^\star$ are differentiable with $C_{\text{smooth}},$ $C_{\pi}$-Lipschitz derivatives, respectively).
+
+<Block type="Key Result">
+Let the dynamics and expert policy $(f, \pi^*)$ be $(C_{\text{smooth}}, C_{\pi})$-smooth, respectively, and all policies $\pi$ are $L_\pi$-Lipschitz. Assume that the closed-loop system induced by $(f, \pi^*)$, $f^{\pi^\star}$, is $(C_{\text{ISS}}, \rho)$-EISS. Let $\hat{\pi}$ be a $L_\pi$-Lipschitz, $C_\pi$-smooth policy. Then, for any $n, T$ and,
+$$
+\sigma_u \lesssim O^*[\text{poly}(1/C_\pi, 1/C_{\text{smooth}})] = O^*(1),
+$$
+we have:
 $$
 J_{\mathrm{imitation}}(\hat{\pi}) \lesssim O^*(T) \sigma_u^{-2} J_{\text{demo}}^T(\hat{\pi}; \mathcal{P}_{\text{exp},\sigma,\alpha}[0.5]).
 $$
-
-In particular, setting $\sigma_u = O^*(1)$, we have:
-
+In particular, setting $\sigma_u = O^*(1)$ (i.e. some $n,T$-independent constant), we have:
 $$
 J_{\mathrm{imitation}}(\hat{\pi}) \lesssim O^*(T) J_{\text{demo}}^T(\hat{\pi}; \mathcal{P}_{\text{exp},\sigma,\alpha}[0.5]).
 $$
 </Block>
 
-<FigureEnv>
-  <HStack>
-    <Figure src={`${BASE_URL}/figs/noising_manifold.svg`} alt="Effect of noise injection for controllable versus uncontrollable subspaces"/>
-  </HStack>
-</FigureEnv>
+
+{/*
+  * Capture and hide the auto-generated bibliography
+  * for this markdown fragment.
+  */}
+<Refs show={false}>
+  [^ref]
+</Refs>
