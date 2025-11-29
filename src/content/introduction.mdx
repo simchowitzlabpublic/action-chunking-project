@@ -31,7 +31,7 @@ There are a number of speculated benefits associated with action-chunking, inclu
 
 
 <Block type="Finding 1"> 
-When the underlying environment is open-loop stable, action-chunking alone suffices to prevent compounding errors, leading to horizon-free imitation guarantees. In contrast, without action-chunking, prior work (Simchowitz, Pfrommer, Jadbabaie '25') show that errors can grow expoenntially in the problem horizon, even when the dynamics are stable. 
+When the underlying environment is inherently stablizing (i.e. open-loop stable), action-chunking alone suffices to prevent compounding errors, leading to horizon-free imitation guarantees. In contrast, without action-chunking, prior work (Simchowitz, Pfrommer, Jadbabaie '25') show that errors can grow expoenntially in the problem horizon, even when the dynamics are stable. 
 </Block>
 We validate this finding in simulated robotic manipulation tasks from RoboMimic, where we observe that increasing chunk-lengths leads to significant improvements in task success rates. We do so even for deterministic policies imitating a deterministic expert, confirming that the benefits of action-chunking can be realized even in the absence of multi-modality or partial observability.
 
@@ -51,8 +51,7 @@ Informally, stability of a dynamical system measures its sensitivity to compound
 
 However, when the underlying environment is not open-loop stable, action-chunking alone is insufficient to prevent compounding errors, and can even make compounding error worse. In fact, Simchowitz et al. '25 show that, in this regime, *no algorithmic* modification suffices to mitigate error compounding. Instead, we need **better data**.  To this end, we consider a simple practice where the expert demonstrator adds a small amount of well-conditioned noise to their actions during data collection, but collects ground-truth action labels. 
 <Block type="Finding 2"> 
-We show that a simple noise-injection procedure suffices to prevent compounding errors,
-even when the underlying environment is not open-loop stable.
+We show that a simple noise-injection procedure suffices to prevent compounding errors, even when the underlying environment is not inherently stabilizing, provided that the expert demonstrator is capable of correcting from errors.
 </Block>
 
 The effect of noise injection during demonstration collection for unstable environments can be easily understood by examining reward accumulation over a single trajectory in a continuous control environment such as the MuJoCo continuous control suite:

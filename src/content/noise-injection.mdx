@@ -42,11 +42,3 @@ $$
     <Figure src={`${BASE_URL}/figs/noising_manifold.svg`} alt="Effect of noise injection for controllable versus uncontrollable subspaces"/>
   </HStack>
 </FigureEnv>
-
-### Key Findings
-
-- The key role of noise-injection is **ensuring the first-order policy error on the controllable subspace** is detectable.
-- We only require supervision on the **excitable subspace**. In particular, we bypass stringent requirements of RL-theoretic coverage or control-theoretic PE.
-- **Simple white noise suffices to explore** the excitable directions, as the most excitable (fastest compounding error) directions receive the most supervision.
-- **Imitating a mixture of clean and noise-injected trajectories** bypasses additive error scaling with $\sigma_u$. This further implies it is beneficial to use larger noise-levels $\sigma_u > 0$.
-
