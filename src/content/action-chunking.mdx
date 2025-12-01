@@ -32,7 +32,7 @@ We now formalize action-chunking for imitating deterministic expert policies:
 We sample $S_n$ i.i.d. trajectories drawn from the expert distribution $\mathcal{P}_{\text{demo}}$. Instead of learning $\hat{\pi}: \mathcal{X} \to \mathcal{U}$, we learn a $\ell$-chunked-policy $\text{chunk}[\hat{\pi}_{\text{chunk}}]: \mathcal{X} \to \mathcal{U}^\ell$, that attains low **on-expert error** $J_{\text{demo}}(\hat{\pi}_{\text{chunk}})$, e.g., by empirical risk minimization.
 </Block>
 
-The Control-Theoretic intuition behind this intervention is that, by making the chunk length long enough, the learned policy $\hat{\pi}_{\text{chunk}}$ **inherits the open-loop stability of the dynamics $f$**.
+Our novel motivation behind this cmmon intervention is that, by making the chunk length long enough, the learned policy $\hat{\pi}_{\text{chunk}}$ **inherits the open-loop stability of the dynamics $f$**.
 
 <FigureEnv>
     <Figure src={`${BASE_URL}/figs/action_chunking.svg`} alt="Visualization of the stabilizing effect of action chunks"/>
