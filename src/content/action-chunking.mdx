@@ -15,7 +15,7 @@ Action-chunking is a popular practice in modern sequential modeling pipelines, w
  3. Improved representation learning via multi-step prediction.
  4. Simulating Model-Predictive Control.
 
-We show a different mechanism, one not described by the past literature: action-chunking can leverage the open-loop stability of the system to stabilize the learned policy.
+We show a different mechanism, one not described by the past literature: **action-chunking can leverage the open-loop stability of the system to stabilize the learned policy.**
 
 <Block title="Chunking Policy" type="Definition">
 A chunking policy is specified by a chunk-length $\ell$, and a chunking policy $\text{chunk}[\pi]: \mathcal{X} \to \mathcal{U}^{\ell}$ such that $\pi(\mathbf{x}_{1:t},\mathbf{u}_{1:t-1},t) = \text{chunk}[\pi](\mathbf{x}_{\ell k})_{t - \ell k}$ where $k = \lfloor \frac{t}{\ell}\rfloor$, i.e. we predict $\ell$-length sequences which are then executed "open-loop" without feedback from $\mathbf{x}$ until the chunk has been exhausted.
